@@ -1,0 +1,41 @@
+{
+   "basics":{
+      "name":"Sample Name",
+      "email":"jane.doe@email.com",
+      "phone":"555-0123",
+      "location":"New York, NY",
+      "linkedin":"linkedin.com/in/janedoe"
+   },
+   "summary":"Results-driven Software Engineer with 5 years of experience building scalable web apps.",
+   "experience":[
+      {
+         "title":"Senior Developer",
+         "company":"Oracle",
+         "dates":"2021 - Present",
+         "highlights":[
+            "Led a team of 5",
+            "Reduced latency by 20%",
+            "Migrated legacy systems to Cloud"
+         ]
+      },
+      {
+         "title":"Junior Developer",
+         "company":"Startup Inc",
+         "dates":"2018 - 2021",
+         "highlights":[
+            "Developed UI components",
+            "Optimized database queries"
+         ]
+      }
+   ],
+   "skills":[
+      "Python"
+   ],
+   "education":[
+      {
+         "institution":"University of Technology",
+         "degree":"B.S. Computer Science",
+         "year":"2018"
+      }
+   ]
+}

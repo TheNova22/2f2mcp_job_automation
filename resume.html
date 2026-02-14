@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ basics.name }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
+        header { border-bottom: 2px solid #444; padding-bottom: 10px; margin-bottom: 20px; text-align: center; }
+        h1 { margin: 0; color: #2c3e50; }
+        .contact-info { font-size: 0.9em; color: #666; }
+        section { margin-bottom: 20px; }
+        h2 { border-bottom: 1px solid #ccc; color: #2c3e50; font-size: 1.2em; text-transform: uppercase; }
+        .item { margin-bottom: 15px; }
+        .item-header { display: flex; justify-content: space-between; font-weight: bold; }
+        .item-sub { font-style: italic; color: #555; }
+        ul { margin-top: 5px; }
+        .skills-list { column-count: 3; list-style-type: square; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>{{ basics.name }}</h1>
+        <div class="contact-info">
+            {{ basics.email }} | {{ basics.phone }} | {{ basics.location }}
+            <br>
+            <a href="{{ basics.linkedin }}">LinkedIn</a> | <a href="{{ basics.github }}">GitHub</a>
+        </div>
+    </header>
+
+    <section id="summary">
+        <h2>Professional Summary</h2>
+        <p>{{ summary }}</p>
+    </section>
+
+    <section id="experience">
+        <h2>Experience</h2>
+        {% for job in experience %}
+        <div class="item">
+            <div class="item-header">
+                <span>{{ job.title }}</span>
+                <span>{{ job.dates }}</span>
+            </div>
+            <div class="item-sub">{{ job.company }}</div>
+            <ul>
+                {% for bullet in job.highlights %}
+                <li>{{ bullet }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </section>
+
+    <section id="skills">
+        <h2>Skills</h2>
+        <ul class="skills-list">
+            {% for skill in skills %}
+            <li>{{ skill }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section id="education">
+        <h2>Education</h2>
+        {% for edu in education %}
+        <div class="item">
+            <div class="item-header">
+                <span>{{ edu.institution }}</span>
+                <span>{{ edu.year }}</span>
+            </div>
+            <div class="item-sub">{{ edu.degree }}</div>
+        </div>
+        {% endfor %}
+    </section>
+
+</body>
+</html>
