@@ -1,20 +1,20 @@
 ﻿import json
 import os
 import re
-from typing import Any
-
+from typing import Any, List
 from fastmcp import FastMCP
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
 LOCAL_MODEL_PATH = "./models/e5-base-v2/"
-SKILLS_PATH = "skills.json"
+SKILLS_PATH = "fit_score/skills.json"
 BATCH_RESULTS_PATH = os.path.join(os.path.dirname(__file__), "batch_results.json")
 
 
 def load_skill_library(filepath: str = SKILLS_PATH) -> dict[str, list[str]]:
     if not os.path.exists(filepath):
-        return {"python": ["django", "flask", "pytorch"], "sql": ["postgresql", "mysql"]}
+        raise Exception("File not found")
+        # return {"python": ["django", "flask", "pytorch"], "sql": ["postgresql", "mysql"]}
     with open(filepath, "r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -44,21 +44,18 @@ class FitScorer:
         jd_lines = jd_text.lower().split("\n")
         raw_requirements: set[str] = set()
         for line in jd_lines:
-            if any(x in line for x in ["must have", "required", "mandatory", "essential"]):
-                words = re.findall(r"\b[a-zA-Z\+\#\.]+\b", line)
-                raw_requirements.update(words)
+            # Update the following to just capture key words ignoring buffer words
+            raw_requirements.update([x for x in line.split(' ')])
 
         valid_library_terms = set(SKILL_LIBRARY.keys())
         for values in SKILL_LIBRARY.values():
             valid_library_terms.update(values)
-
         targeted_requirements = raw_requirements.intersection(valid_library_terms)
         if not targeted_requirements:
             return 100.0, [], []
 
-        resume_words = self.extract_all_raw_words(resume_text)
+        resume_words = self.extract_all_raw_words(resume_text.lower())
         matched, missing = [], []
-
         for req in targeted_requirements:
             is_match = False
             if req in SKILL_LIBRARY:
@@ -130,13 +127,6 @@ class FitScorer:
             },
         }
 
-    # def process_batch(self, resume_list: list[str], jd_text: str) -> dict[str, dict[str, Any]]:
-    #     batch_results: dict[str, dict[str, Any]] = {}
-    #     for i, resume_content in enumerate(resume_list):
-    #         resume_id = f"resume_{i + 1}"
-    #         batch_results[resume_id] = self.score_job_fit(resume_content, jd_text)
-    #     return batch_results
-
     def process_batch(self, resume_content: str, jd_text_list: list[str]) -> dict[str, dict[str, Any]]:
         batch_results: dict[str, dict[str, Any]] = {}
         for i, jd in enumerate(jd_text_list):
@@ -152,16 +142,9 @@ class FitScorer:
 scorer = FitScorer()
 mcp = FastMCP("fit-scoring-mcp")
 
-
 @mcp.tool()
-def score_resume_against_jd(resume_text: str, jd_text: str) -> dict[str, Any]:
-    """Score one resume against a job description."""
-    return scorer.score_job_fit(resume_text, jd_text)
-
-
-@mcp.tool()
-def score_resume_batch(resume: str, jd_text_list: list[str]) -> dict[str, dict[str, Any]]:
-    """Score multiple resumes against one job description."""
+def score_resume_batch(resume: str, jd_text_list: List[str]) -> dict[str, dict[str, Any]]:
+    """Score a resume against multiple job descriptions as list(which can be a list of one)."""
     return scorer.process_batch(resume, jd_text_list)
 
 

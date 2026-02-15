@@ -1,76 +1,53 @@
 {
-    "resume_1": {
-        "overall_score": 96.17,
-        "details": {
-            "matched_skills": [
-                "docker",
-                "python",
-                "aws",
-                "sql"
-            ],
-            "missing_skills": [],
-            "experience": {
-                "required": 5,
-                "found": 6,
-                "score": 100
-            },
-            "semantic_score": 90.43
-        }
-    },
-    "resume_2": {
-        "overall_score": 67.33,
-        "details": {
-            "matched_skills": [
-                "python",
-                "sql"
-            ],
-            "missing_skills": [
-                "docker",
-                "aws"
-            ],
-            "experience": {
-                "required": 5,
-                "found": 3,
-                "score": 60
-            },
-            "semantic_score": 88.33
-        }
-    },
-    "resume_3": {
-        "overall_score": 64.72,
-        "details": {
-            "matched_skills": [
-                "aws"
-            ],
-            "missing_skills": [
-                "docker",
-                "python",
-                "sql"
-            ],
-            "experience": {
-                "required": 5,
-                "found": 10,
-                "score": 100
-            },
-            "semantic_score": 86.79
-        }
-    },
-    "resume_4": {
-        "overall_score": 95.87,
-        "details": {
-            "matched_skills": [
-                "docker",
-                "python",
-                "aws",
-                "sql"
-            ],
-            "missing_skills": [],
-            "experience": {
-                "required": 5,
-                "found": 6,
-                "score": 100
-            },
-            "semantic_score": 89.66
-        }
+  "jd_1": {
+    "overall_score": 74.96,
+    "details": {
+      "matched_skills": [
+        "cloud",
+        "devops"
+      ],
+      "missing_skills": [
+        "openshift"
+      ],
+      "experience": {
+        "required": 0,
+        "found": 0,
+        "score": 100
+      },
+      "semantic_score": 85.74
     }
+  },
+  "jd_2": {
+    "overall_score": 93.16,
+    "details": {
+      "matched_skills": [
+        "devops"
+      ],
+      "missing_skills": [],
+      "experience": {
+        "required": 0,
+        "found": 0,
+        "score": 100
+      },
+      "semantic_score": 82.9
+    }
+  },
+  "jd_3": {
+    "overall_score": 66.53,
+    "details": {
+      "matched_skills": [
+        "devops"
+      ],
+      "missing_skills": [
+        "ci/cd",
+        "testing"
+      ],
+      "experience": {
+        "required": 0,
+        "found": 0,
+        "score": 100
+      },
+      "semantic_score": 82.99
+    }
+  }
 }
