@@ -27,7 +27,7 @@ At a high level, the system composes 3 MCP servers:
     *   MCP resource: `time://now`
     *   MCP prompt: `greeting_prompt`
 
-1.  `job_server.py` (`JobSpy-Search-Pro`, port `8002`)
+2.  `job_server.py` (`JobSpy-Search-Pro`, port `8002`)
 
 *   Job discovery MCP powered by `python-jobspy`.
 *   Tool:
@@ -35,7 +35,7 @@ At a high level, the system composes 3 MCP servers:
 *   Resource:
     *   `jobs://latest-summary` (markdown table summary of last query)
 
-1.  `fit_score/fit_scoring.py` (`fit-scoring-mcp`, port `8085`)
+3.  `fit_score/fit_scoring.py` (`fit-scoring-mcp`, port `8085`)
 
 *   Resume to JD scoring server.
 *   Hybrid scoring:
