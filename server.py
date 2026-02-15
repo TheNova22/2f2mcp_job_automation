@@ -106,7 +106,7 @@ def generate_resume(
     """Render resume HTML from template data and host it temporarily on a local port."""
     duration_seconds: int = 300
     port: int = 30101
-    output_path: str = "generated/my_resume.html",
+    output_path: str = "generated/my_resume.html"
     template_path: str = "resume.html"
     if duration_seconds <= 0:
         return "duration_seconds must be greater than 0"
@@ -119,7 +119,6 @@ def generate_resume(
         env = Environment(loader=FileSystemLoader(str(template_file.parent)))
         template = env.get_template(template_file.name)
         output_html = template.render(data)
-
         output_file = Path(output_path).expanduser().resolve()
         output_file.parent.mkdir(parents=True, exist_ok=True)
         output_file.write_text(output_html, encoding="utf-8")
