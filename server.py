@@ -1,9 +1,11 @@
+import configparser
+import re
+import threading
 from datetime import datetime, timedelta
 from functools import partial
+from html.parser import HTMLParser
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-import configparser
-import threading
 from typing import Any
 
 from fastmcp import FastMCP
@@ -57,12 +59,43 @@ def send_mail(receiver_email: str, subject: str, content: str) -> str:
 
 @mcp.tool()
 def read_resume(path: str) -> str:
-    """Read a resume PDF and return its extracted text as a string."""
-    pdf_path = Path(path).expanduser().resolve()
-    if not pdf_path.exists():
-        return f"File not found: {pdf_path}"
-    if pdf_path.suffix.lower() != ".pdf":
-        return f"Unsupported file type: {pdf_path.suffix}. Please provide a PDF file."
+    """Read a resume file (.pdf/.html/.htm) and return its extracted text."""
+    resume_path = Path(path).expanduser().resolve()
+    if not resume_path.exists():
+        return f"File not found: {resume_path}"
+    suffix = resume_path.suffix.lower()
+
+    if suffix in {".html", ".htm"}:
+        class _HTMLTextExtractor(HTMLParser):
+            def __init__(self) -> None:
+                super().__init__()
+                self._chunks: list[str] = []
+
+            def handle_data(self, data: str) -> None:
+                text = data.strip()
+                if text:
+                    self._chunks.append(text)
+
+            def get_text(self) -> str:
+                return "\n".join(self._chunks)
+
+        try:
+            html_content = resume_path.read_text(encoding="utf-8", errors="ignore")
+            parser = _HTMLTextExtractor()
+            parser.feed(html_content)
+            text = parser.get_text()
+            text = re.sub(r"\n{2,}", "\n", text).strip()
+            if not text:
+                return f"No extractable text found in HTML: {resume_path}"
+            return text
+        except Exception as exc:
+            return f"Failed to read HTML '{resume_path}': {exc}"
+
+    if suffix != ".pdf":
+        return (
+            f"Unsupported file type: {resume_path.suffix}. "
+            "Please provide a PDF or HTML file."
+        )
 
     try:
         from pypdf import PdfReader
@@ -73,14 +106,14 @@ def read_resume(path: str) -> str:
         )
 
     try:
-        reader = PdfReader(str(pdf_path))
+        reader = PdfReader(str(resume_path))
         pages = [page.extract_text() or "" for page in reader.pages]
         text = "\n".join(pages).strip()
         if not text:
-            return f"No extractable text found in PDF: {pdf_path}"
+            return f"No extractable text found in PDF: {resume_path}"
         return text
     except Exception as exc:
-        return f"Failed to read PDF '{pdf_path}': {exc}"
+        return f"Failed to read PDF '{resume_path}': {exc}"
 
 
 def _stop_preview_server() -> None:
