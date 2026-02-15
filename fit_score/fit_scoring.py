@@ -9,6 +9,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 LOCAL_MODEL_PATH = "./models/e5-base-v2/"
 SKILLS_PATH = "skills.json"
+BATCH_RESULTS_PATH = os.path.join(os.path.dirname(__file__), "batch_results.json")
 
 
 def load_skill_library(filepath: str = SKILLS_PATH) -> dict[str, list[str]]:
@@ -129,11 +130,22 @@ class FitScorer:
             },
         }
 
-    def process_batch(self, resume_list: list[str], jd_text: str) -> dict[str, dict[str, Any]]:
+    # def process_batch(self, resume_list: list[str], jd_text: str) -> dict[str, dict[str, Any]]:
+    #     batch_results: dict[str, dict[str, Any]] = {}
+    #     for i, resume_content in enumerate(resume_list):
+    #         resume_id = f"resume_{i + 1}"
+    #         batch_results[resume_id] = self.score_job_fit(resume_content, jd_text)
+    #     return batch_results
+
+    def process_batch(self, resume_content: str, jd_text_list: list[str]) -> dict[str, dict[str, Any]]:
         batch_results: dict[str, dict[str, Any]] = {}
-        for i, resume_content in enumerate(resume_list):
-            resume_id = f"resume_{i + 1}"
-            batch_results[resume_id] = self.score_job_fit(resume_content, jd_text)
+        for i, jd in enumerate(jd_text_list):
+            jd_id = f"jd_{i + 1}"
+            batch_results[jd_id] = self.score_job_fit(resume_content, jd)
+
+        with open(BATCH_RESULTS_PATH, "w", encoding="utf-8") as f:
+            json.dump(batch_results, f, indent=2)
+
         return batch_results
 
 
@@ -148,9 +160,9 @@ def score_resume_against_jd(resume_text: str, jd_text: str) -> dict[str, Any]:
 
 
 @mcp.tool()
-def score_resume_batch(resumes: list[str], jd_text: str) -> dict[str, dict[str, Any]]:
+def score_resume_batch(resume: str, jd_text_list: list[str]) -> dict[str, dict[str, Any]]:
     """Score multiple resumes against one job description."""
-    return scorer.process_batch(resumes, jd_text)
+    return scorer.process_batch(resume, jd_text_list)
 
 
 @mcp.tool()
