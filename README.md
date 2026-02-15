@@ -134,6 +134,14 @@ python fit_score/fit_scoring.py
 
 These are useful to quickly bootstrap Archestra/n8n agent behavior and output format contracts.
 
+## Images
+
+### Archestra Agents
+![Archestra Agents](resources/archestra_agents.png)
+
+### n8n Flow
+![n8n Flow](resources/n8n_flow.png)
+
 ## Cool Additions Worth Building Next
 
 1.  Add a `docker-compose.yml` to run all MCP servers with one command.
